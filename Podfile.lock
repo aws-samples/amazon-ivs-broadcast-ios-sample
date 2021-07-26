@@ -1,0 +1,16 @@
+PODS:
+  - AmazonIVSBroadcast (1.0.0)
+
+DEPENDENCIES:
+  - AmazonIVSBroadcast
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - AmazonIVSBroadcast
+
+SPEC CHECKSUMS:
+  AmazonIVSBroadcast: eac3e9892bf01af85ff4595e1259f8ed09d55476
+
+PODFILE CHECKSUM: 67ddca701693380b2275c0933d6c448457163559
+
+COCOAPODS: 1.10.1
