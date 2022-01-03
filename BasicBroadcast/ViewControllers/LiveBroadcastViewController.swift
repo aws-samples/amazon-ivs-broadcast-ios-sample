@@ -6,7 +6,7 @@ import UIKit
 import AmazonIVSBroadcast
 import AVFoundation
 
-class ViewController: UIViewController {
+class LiveBroadcastViewController: UIViewController {
 
     // MARK: - Properties
 
@@ -20,6 +20,7 @@ class ViewController: UIViewController {
 
     @IBOutlet private var cameraButton: UIButton!
     @IBOutlet private var microphoneButton: UIButton!
+    @IBOutlet private var muteButton: UIButton!
 
     // State management
     private var isRunning = false {
@@ -27,12 +28,17 @@ class ViewController: UIViewController {
             startButton.setTitle(isRunning ? "Stop" : "Start", for: .normal)
         }
     }
+    private var isMuted = false {
+        didSet {
+            applyMute()
+        }
+    }
     private var attachedCamera: IVSDevice? {
         didSet {
             cameraButton.setTitle(attachedCamera?.descriptor().friendlyName ?? "None", for: .normal)
 
             if let preview = try? (attachedCamera as? IVSImageDevice)?.previewView(with: .fill) {
-                attachCameraPreview(preview)
+                attachCameraPreview(container: previewView, preview: preview)
             } else {
                 previewView.subviews.forEach { $0.removeFromSuperview() }
             }
@@ -41,6 +47,9 @@ class ViewController: UIViewController {
     private var attachedMicrophone: IVSDevice? {
         didSet {
             microphoneButton.setTitle(attachedMicrophone?.descriptor().friendlyName ?? "None", for: .normal)
+            // When a new microphone is attached it has a default gain of 1. This reapplies the mute setting
+            // immediately after the new microphone is attached.
+            applyMute()
         }
     }
 
@@ -51,6 +60,8 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        isMuted = false // trigger didSet because Storyboards don't support iOS version checks.
 
         // Tapping on the preview image will dismiss the keyboard
         let tap = UITapGestureRecognizer(target: self, action: #selector(previewTapped))
@@ -67,7 +78,16 @@ class ViewController: UIViewController {
         // The SDK will not handle disabling the idle timer for you because that might
         // interfere with your application's use of this API elsewhere.
         UIApplication.shared.isIdleTimerDisabled = true
-        checkPermissionsThenSetup()
+
+        checkAVPermissions { [weak self] granted in
+            if granted {
+                if self?.broadcastSession == nil {
+                    self?.setupSession()
+                }
+            } else {
+                self?.displayPermissionError()
+            }
+        }
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -113,6 +133,43 @@ class ViewController: UIViewController {
         chooseDevice(sender, type: .microphone, deviceName: "Microphone", deviceSelected: setMicrophone(_:))
     }
 
+    @IBAction private func muteTapped(_ sender: UIButton) {
+        isMuted.toggle()
+    }
+
+    private func applyMute() {
+        // It is important to note that when muting a microphone by adjusting the gain, the microphone will still be recording.
+        // The orange light indicator on iOS devices will remain active. The SDK is still receiving all the real audio
+        // samples, it is just applying a gain of 0 to them. To make the orange light turn off you need to detach the microphone
+        // completely from the SDK, not just mute it.
+
+        let gain: Float = isMuted ? 0 : 1
+        let muteAll = true // toggle to change the mute strategy. Both are functionally equivalent in this sample app
+
+        // In case there are any pending changes, let them finish and then update the mute status.
+        broadcastSession?.awaitDeviceChanges { [weak self] in
+            guard let `self` = self else { return }
+            if (muteAll) {
+                // This mutes all attached devices audio devices, doing so will mute all incoming audio until the gain
+                // on one of the IVSAudioDevices is changed, or a new device is attached with a non-zero gain.
+                self.broadcastSession?.listAttachedDevices()
+                    .compactMap { $0 as? IVSAudioDevice }
+                    .forEach { $0.setGain(gain) }
+            } else {
+                // This mutes just a single device
+                (self.attachedMicrophone as? IVSAudioDevice)?.setGain(gain)
+            }
+        }
+
+        if #available(iOS 13.0, *) {
+            let imageName = isMuted ? "speaker.slash" : "speaker"
+            muteButton.setImage(UIImage(systemName: imageName), for: .normal)
+        } else {
+            let title = isMuted ? "Unmute" : "Mute"
+            muteButton.setTitle(title, for: .normal)
+        }
+    }
+
     private func chooseDevice(_ sender: UIButton, type: IVSDeviceType, deviceName: String, deviceSelected: @escaping (IVSDeviceDescriptor) -> Void) {
         let alert = UIAlertController(title: "Choose a \(deviceName)", message: nil, preferredStyle: .actionSheet)
         IVSBroadcastSession.listAvailableDevices()
@@ -135,52 +192,12 @@ class ViewController: UIViewController {
         view.endEditing(false)
     }
 
-    // MARK: - AV Permissions
-
-    private func checkPermissionsThenSetup() {
-        // Make sure we have both audio and video permissions before setting up the broadcast session.
-        checkOrGetPermission(for: .video) { [weak self] (granted) in
-            guard granted else {
-                self?.displayPermissionError()
-                return
-            }
-            self?.checkOrGetPermission(for: .audio) { [weak self] (granted) in
-                guard granted else {
-                    self?.displayPermissionError()
-                    return
-                }
-                if (self?.broadcastSession == nil) {
-                    self?.setupSession()
-                }
-            }
-        }
-    }
-
-    private func checkOrGetPermission(for mediaType: AVMediaType, _ result: @escaping (Bool) -> Void) {
-        func mainThreadResult(_ success: Bool) {
-            DispatchQueue.main.async { result(success) }
-        }
-        switch AVCaptureDevice.authorizationStatus(for: mediaType) {
-        case .authorized: mainThreadResult(true)
-        case .notDetermined: AVCaptureDevice.requestAccess(for: mediaType) { mainThreadResult($0) }
-        case .denied, .restricted: mainThreadResult(false)
-        @unknown default: mainThreadResult(false)
-        }
-    }
-
-    private func displayPermissionError() {
-        let alert = UIAlertController(title: "Permission Error",
-                                      message: "This app does not have access to either the microphone or camera permissions. Please go into system settings and enable thees permissions for this app.",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
-
     // MARK: - Utility Functions
 
     private func setupSession() {
         do {
             // Create the session with a preset config and camera/microphone combination.
+            IVSBroadcastSession.applicationAudioSessionStrategy = .playAndRecord
             let broadcastSession = try IVSBroadcastSession(configuration: IVSPresets.configurations().standardPortrait(),
                                                            descriptors: IVSPresets.devices().frontCamera(),
                                                            delegate: self)
@@ -197,17 +214,6 @@ class ViewController: UIViewController {
         } catch {
             displayErrorAlert(error, "setting up session")
         }
-    }
-
-    private func displayErrorAlert(_ error: Error, _ msg: String) {
-        // Display the error if something went wrong.
-        // This is mainly for debugging. Human-readable error descriptions are provided for
-        // `IVSBroadcastError`s, but they may not be especially useful for the end user.
-        let alert = UIAlertController(title: "Error \(msg) (Code: \((error as NSError).code))",
-                                      message: error.localizedDescription,
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
 
     private func setCamera(_ device: IVSDeviceDescriptor) {
@@ -249,24 +255,11 @@ class ViewController: UIViewController {
         attachedMicrophone = microphones.first
     }
 
-    private func attachCameraPreview(_ cameraView: UIView) {
-        // Clear current view, and then attach the new view.
-        previewView.subviews.forEach { $0.removeFromSuperview() }
-        cameraView.translatesAutoresizingMaskIntoConstraints = false
-        previewView.addSubview(cameraView)
-        NSLayoutConstraint.activate([
-            cameraView.topAnchor.constraint(equalTo: previewView.topAnchor, constant: 0),
-            cameraView.bottomAnchor.constraint(equalTo: previewView.bottomAnchor, constant: 0),
-            cameraView.leadingAnchor.constraint(equalTo: previewView.leadingAnchor, constant: 0),
-            cameraView.trailingAnchor.constraint(equalTo: previewView.trailingAnchor, constant: 0),
-        ])
-    }
-
 }
 
 // MARK: - IVS Broadcast SDK Delegate
 
-extension ViewController : IVSBroadcastSession.Delegate {
+extension LiveBroadcastViewController : IVSBroadcastSession.Delegate {
 
     func broadcastSession(_ session: IVSBroadcastSession, didChange state: IVSBroadcastSession.State) {
         print("IVSBroadcastSession state did change to \(state.rawValue)")
@@ -287,7 +280,9 @@ extension ViewController : IVSBroadcastSession.Delegate {
     }
 
     func broadcastSession(_ session: IVSBroadcastSession, didEmitError error: Error) {
-        displayErrorAlert(error, "in SDK")
+        DispatchQueue.main.async {
+            self.displayErrorAlert(error, "in SDK")
+        }
     }
 
     func broadcastSession(_ session: IVSBroadcastSession, didAddDevice descriptor: IVSDeviceDescriptor) {
