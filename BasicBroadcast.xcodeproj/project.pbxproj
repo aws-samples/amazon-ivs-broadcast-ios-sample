@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B54DBD5A9E097A779373CE7E /* libPods-ScreenCapture.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E21AB19670C32EA72E03B71E /* libPods-ScreenCapture.a */; };
 		D919EB6E97675389822EB4CB /* libPods-BasicBroadcast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97AD6CEC40B1754ADA708C86 /* libPods-BasicBroadcast.a */; };
+		EA04C030278880D300B7F6E4 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA04C02F278880D300B7F6E4 /* TableViewController.swift */; };
 		EA3D73E8276102D6004DC8CD /* CustomSourcesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D73E7276102D6004DC8CD /* CustomSourcesViewController.swift */; };
 		EA3D73EA276102DF004DC8CD /* MixerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D73E9276102DF004DC8CD /* MixerViewController.swift */; };
 		EA3D73ED27611027004DC8CD /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA3D73EC27611027004DC8CD /* Utils.swift */; };
@@ -60,6 +61,7 @@
 		91A536620470F577FD7062CB /* Pods-ScreenCapture.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScreenCapture.release.xcconfig"; path = "Target Support Files/Pods-ScreenCapture/Pods-ScreenCapture.release.xcconfig"; sourceTree = "<group>"; };
 		97AD6CEC40B1754ADA708C86 /* libPods-BasicBroadcast.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasicBroadcast.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E21AB19670C32EA72E03B71E /* libPods-ScreenCapture.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ScreenCapture.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EA04C02F278880D300B7F6E4 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		EA3D73E7276102D6004DC8CD /* CustomSourcesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSourcesViewController.swift; sourceTree = "<group>"; };
 		EA3D73E9276102DF004DC8CD /* MixerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixerViewController.swift; sourceTree = "<group>"; };
 		EA3D73EC27611027004DC8CD /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				EA3D73E7276102D6004DC8CD /* CustomSourcesViewController.swift */,
 				EACB225726824C850037FF69 /* LiveBroadcastViewController.swift */,
 				EA3D73E9276102DF004DC8CD /* MixerViewController.swift */,
+				EA04C02F278880D300B7F6E4 /* TableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				EACB225826824C850037FF69 /* LiveBroadcastViewController.swift in Sources */,
 				EACB225426824C850037FF69 /* AppDelegate.swift in Sources */,
 				EA6F46172683784F00C7A12C /* AuthItem.swift in Sources */,
+				EA04C030278880D300B7F6E4 /* TableViewController.swift in Sources */,
 				EA3D73EA276102DF004DC8CD /* MixerViewController.swift in Sources */,
 				EA6F461B2683784F00C7A12C /* UserDefaultsDao.swift in Sources */,
 				EA3D73E8276102D6004DC8CD /* CustomSourcesViewController.swift in Sources */,
