@@ -129,7 +129,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Stream Key" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Adh-u4-9Rb">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Stream Key" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Adh-u4-9Rb" customClass="ShowHideTextField" customModule="BasicBroadcast" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="52" width="382" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="kLD-C5-Xst"/>
