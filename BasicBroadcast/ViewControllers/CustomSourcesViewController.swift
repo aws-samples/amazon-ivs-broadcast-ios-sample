@@ -8,9 +8,25 @@ import AVFoundation
 
 class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
 
+    @IBOutlet private var endpointField: UITextField!
+    @IBOutlet private var streamKeyField: UITextField!
+    @IBOutlet private var startButton: UIButton!
+    
     @IBOutlet private var previewView: UIView!
+    @IBOutlet private var connectionView: UIView!
     @IBOutlet private var labelSoundDb: UILabel!
-
+    
+    @IBOutlet private var applyFilterButton: UIButton!
+    
+    // State management
+    private var isRunning = false {
+        didSet {
+            startButton.setTitle(isRunning ? "Stop" : "Start", for: .normal)
+        }
+    }
+    
+    private var filterHelper: FilterHelper?
+    
     // This broadcast session is the main interaction point with the SDK
     private var broadcastSession: IVSBroadcastSession?
 
@@ -42,12 +58,38 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
             }
         }
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Tapping on the preview image will dismiss the keyboard
+        let tap = UITapGestureRecognizer(target: self, action: #selector(previewTapped))
+        previewView.addGestureRecognizer(tap)
+        
+        // Auto complete the last used endpoint/key pair.
+        let lastAuth = UserDefaultsAuthDao.shared.lastUsedAuth()
+        endpointField.text = lastAuth?.endpoint
+        streamKeyField.text = lastAuth?.streamKey
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.broadcastSession?.stop()
+    }
+    
+    @objc
+    private func previewTapped() {
+        // This allows the user to tap on the preview view to dismiss the keyboard when
+        // entering the endpoint and stream key.
+        view.endEditing(false)
+    }
 
     private func setupSession() {
         do {
             // Create a custom configuration at 720p60
             let config = IVSBroadcastConfiguration()
-            try config.video.setSize(CGSize(width: 1280, height: 720))
+            try config.video.setSize(CGSize(width: 720, height: 1280))
             try config.video.setTargetFramerate(60)
 
             // This slot will eventually bind to a custom image and audio source. This will be done manually after the creation
@@ -107,6 +149,7 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
 
             let videoOutput = AVCaptureVideoDataOutput()
             videoOutput.setSampleBufferDelegate(self, queue: queue)
+            videoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
             if captureSession.canAddOutput(videoOutput) {
                 captureSession.addOutput(videoOutput)
                 self.videoOutput = videoOutput
@@ -136,14 +179,21 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == videoOutput {
-            // This keeps the images coming in with the correct orientation.
+            
             connection.videoOrientation = orientation
+            
+            // This keeps the images coming in with the correct orientation.
+            // connection.videoOrientation = orientation
             // A host application can do further processing of this sample by applying a CIFilter, custom Metal shader, or
             // by using a more complex pipeline that provides services like a beauty filter.
+            
+            // As an example using CIFilter
+            let finalBuffer = filterHelper?.process(inputBuffer: sampleBuffer) ?? sampleBuffer
+            
             // It is important that the processing finishes before the next frame arrives, otherwise frames will start to backup.
             // If a new video sample does not arrive to the SDK in time, the previous sample will be repeated in the broadcast
             // until a new frame arrives.
-            customImageSource?.onSampleBuffer(sampleBuffer)
+            customImageSource?.onSampleBuffer(finalBuffer)
         } else if output == audioOutput {
             // A host application can do further processing of this sample here. It is required for processing to happen before
             // the next sample arrives, otherwise audio may be dropped (it will be replaced with silence).
@@ -151,6 +201,43 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
         }
     }
 
+    
+    @IBAction private func startTapped(_ sender: UIButton) {
+        if isRunning {
+            // Stop the session if we're running
+            broadcastSession?.stop()
+            isRunning = false
+        } else {
+            // Start the session if we're not running.
+            guard let endpointPath = endpointField.text, let url = URL(string: endpointPath), let key = streamKeyField.text else {
+                let alert = UIAlertController(title: "Invalid Endpoint",
+                                              message: "The endpoint or streamkey you provided is invalid",
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                present(alert, animated: true)
+                return
+            }
+            do {
+                // store this endpoint/key pair to share with the screen capture extension
+                // and to auto-complete the next time this app is launched
+                let authItem = AuthItem(endpoint: endpointPath, streamKey: key)
+                UserDefaultsAuthDao.shared.insert(authItem)
+                try broadcastSession?.start(with: url, streamKey: key)
+                isRunning = true
+            } catch {
+                displayErrorAlert(error, "starting session")
+            }
+        }
+    }
+    
+    @IBAction private func applyFilterTapped(_ sender: UIButton) {
+        if filterHelper == nil {
+            filterHelper = FilterHelper()
+        } else {
+            filterHelper = nil
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         orientation = AVCaptureVideoOrientation(rawValue: UIApplication.shared.statusBarOrientation.rawValue)!
     }
@@ -158,7 +245,23 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
 
 
 extension CustomSourcesViewController: IVSBroadcastSession.Delegate {
-    func broadcastSession(_ session: IVSBroadcastSession, didChange state: IVSBroadcastSession.State) {}
+    func broadcastSession(_ session: IVSBroadcastSession, didChange state: IVSBroadcastSession.State) {
+        print("IVSBroadcastSession state did change to \(state.rawValue)")
+        DispatchQueue.main.async {
+            switch state {
+            case .invalid: self.connectionView.backgroundColor = .darkGray
+            case .connecting: self.connectionView.backgroundColor = .yellow
+            case .connected: self.connectionView.backgroundColor = .green
+            case .disconnected:
+                self.connectionView.backgroundColor = .darkGray
+                self.isRunning = false
+            case .error:
+                self.connectionView.backgroundColor = .red
+                self.isRunning = false
+            @unknown default: self.connectionView.backgroundColor = .darkGray
+            }
+        }
+    }
     func broadcastSession(_ session: IVSBroadcastSession, didEmitError error: Error) {}
     func broadcastSession(_ session: IVSBroadcastSession, audioStatsUpdatedWithPeak peak: Double, rms: Double) {
         labelSoundDb.text = "db: \(rms)"

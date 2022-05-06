@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		86CCF8202825B3420081D482 /* LICENSE.Apple.txt in Resources */ = {isa = PBXBuildFile; fileRef = 86CCF81F2825B3420081D482 /* LICENSE.Apple.txt */; };
+		86D6D9982819CD48000EF98C /* FilterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D6D9972819CD48000EF98C /* FilterHelper.swift */; };
+		86EA9E0828060DA100A59209 /* ColorFilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EA9E0728060DA100A59209 /* ColorFilterRenderer.swift */; };
 		B54DBD5A9E097A779373CE7E /* libPods-ScreenCapture.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E21AB19670C32EA72E03B71E /* libPods-ScreenCapture.a */; };
 		D919EB6E97675389822EB4CB /* libPods-BasicBroadcast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97AD6CEC40B1754ADA708C86 /* libPods-BasicBroadcast.a */; };
 		EA04C030278880D300B7F6E4 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA04C02F278880D300B7F6E4 /* TableViewController.swift */; };
@@ -59,6 +62,9 @@
 		0A279A92A6F03B028301F81E /* Pods-BasicBroadcast.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasicBroadcast.debug.xcconfig"; path = "Target Support Files/Pods-BasicBroadcast/Pods-BasicBroadcast.debug.xcconfig"; sourceTree = "<group>"; };
 		2EA03E05D483F14A3191F33A /* Pods-ScreenCapture.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScreenCapture.debug.xcconfig"; path = "Target Support Files/Pods-ScreenCapture/Pods-ScreenCapture.debug.xcconfig"; sourceTree = "<group>"; };
 		5E4B9DF69F022AB3F19D0667 /* Pods-BasicBroadcast.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BasicBroadcast.release.xcconfig"; path = "Target Support Files/Pods-BasicBroadcast/Pods-BasicBroadcast.release.xcconfig"; sourceTree = "<group>"; };
+		86CCF81F2825B3420081D482 /* LICENSE.Apple.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.Apple.txt; sourceTree = "<group>"; };
+		86D6D9972819CD48000EF98C /* FilterHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHelper.swift; sourceTree = "<group>"; };
+		86EA9E0728060DA100A59209 /* ColorFilterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorFilterRenderer.swift; sourceTree = "<group>"; };
 		91A536620470F577FD7062CB /* Pods-ScreenCapture.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScreenCapture.release.xcconfig"; path = "Target Support Files/Pods-ScreenCapture/Pods-ScreenCapture.release.xcconfig"; sourceTree = "<group>"; };
 		97AD6CEC40B1754ADA708C86 /* libPods-BasicBroadcast.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasicBroadcast.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E21AB19670C32EA72E03B71E /* libPods-ScreenCapture.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ScreenCapture.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,6 +122,16 @@
 				91A536620470F577FD7062CB /* Pods-ScreenCapture.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		86EA9E0428060D6200A59209 /* Filter */ = {
+			isa = PBXGroup;
+			children = (
+				86CCF81F2825B3420081D482 /* LICENSE.Apple.txt */,
+				86EA9E0728060DA100A59209 /* ColorFilterRenderer.swift */,
+				86D6D9972819CD48000EF98C /* FilterHelper.swift */,
+			);
+			path = Filter;
 			sourceTree = "<group>";
 		};
 		96497433203DC2DB0702754B /* Frameworks */ = {
@@ -182,6 +198,7 @@
 		EACB225226824C850037FF69 /* BasicBroadcast */ = {
 			isa = PBXGroup;
 			children = (
+				86EA9E0428060D6200A59209 /* Filter */,
 				EA6F46132683781F00C7A12C /* Storage */,
 				EA3D73EB2761037E004DC8CD /* ViewControllers */,
 				EACB225326824C850037FF69 /* AppDelegate.swift */,
@@ -290,6 +307,7 @@
 				EA3D73EF27611DF9004DC8CD /* ivs.mp4 in Resources */,
 				EACB226026824C860037FF69 /* LaunchScreen.storyboard in Resources */,
 				EACB225D26824C860037FF69 /* Assets.xcassets in Resources */,
+				86CCF8202825B3420081D482 /* LICENSE.Apple.txt in Resources */,
 				EACB225B26824C850037FF69 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -383,9 +401,11 @@
 				EA1B1529278CCDA7002DC2E3 /* ShowHideTextField.swift in Sources */,
 				EA3D73EA276102DF004DC8CD /* MixerViewController.swift in Sources */,
 				EA6F461B2683784F00C7A12C /* UserDefaultsDao.swift in Sources */,
+				86EA9E0828060DA100A59209 /* ColorFilterRenderer.swift in Sources */,
 				EA3D73E8276102D6004DC8CD /* CustomSourcesViewController.swift in Sources */,
 				EA6F46192683784F00C7A12C /* UserDefaultsAuthDao.swift in Sources */,
 				EA3D73ED27611027004DC8CD /* Utils.swift in Sources */,
+				86D6D9982819CD48000EF98C /* FilterHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
