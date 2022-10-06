@@ -1,16 +1,16 @@
 PODS:
-  - AmazonIVSBroadcast (1.7.0)
+  - AmazonIVSBroadcast (1.7.1)
 
 DEPENDENCIES:
-  - AmazonIVSBroadcast (~> 1.7.0)
+  - AmazonIVSBroadcast (~> 1.7.1)
 
 SPEC REPOS:
   trunk:
     - AmazonIVSBroadcast
 
 SPEC CHECKSUMS:
-  AmazonIVSBroadcast: b9aa055ba93a4faf559f29dfe69e209a25c16b57
+  AmazonIVSBroadcast: a90a9ae2f2ede1d75fab9bd5bf37e4d8d48a54a5
 
-PODFILE CHECKSUM: 4172318e80b7f3ec962e66ff0335e64296cbf07b
+PODFILE CHECKSUM: 2ba4d7f2f1778c2e3b6155b4c58b41350a8dd19c
 
 COCOAPODS: 1.11.3
