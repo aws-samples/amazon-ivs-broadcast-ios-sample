@@ -50,6 +50,9 @@ class LiveBroadcastViewController: UIViewController {
             // When a new microphone is attached it has a default gain of 1. This reapplies the mute setting
             // immediately after the new microphone is attached.
             applyMute()
+            if let mic = attachedMicrophone as? IVSMicrophone {
+                mic.delegate = self
+            }
         }
     }
 
@@ -307,4 +310,13 @@ extension LiveBroadcastViewController : IVSBroadcastSession.Delegate {
         // This fires frequently, so we don't log it here.
     }
 
+}
+
+extension LiveBroadcastViewController: IVSMicrophoneDelegate {
+    // When a bluetooth or wired headset is connected or disconnect, the system may automatically change the audio routing behavior on your device.
+    // Use this delegate to be notified of those changes. There is no requirement to take any action here, we are just going to update the UI to
+    // reference the new device name by invoking the setter on attachedMicrophone.
+    func underlyingInputSourceChanged(for microphone: IVSMicrophone, toInputSource inputSource: IVSDeviceDescriptor?) {
+        self.attachedMicrophone = microphone
+    }
 }
