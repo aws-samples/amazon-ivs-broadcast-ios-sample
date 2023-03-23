@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Stage View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="StageViewController" customModule="StagesApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="76S-tL-2RL">
+                                <rect key="frame" x="0.0" y="48" width="414" height="814"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Pi1-Ui-OQj" customClass="ParticipantCollectionViewLayout" customModule="StagesApp" customModuleProvider="target">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                            </collectionView>
+                            <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YAP-ui-sAW" userLabel="Button View">
+                                <rect key="frame" x="0.0" y="802" width="414" height="94"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="8gT-Xn-REL">
+                                        <rect key="frame" x="28" y="0.0" width="358" height="60"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xt1-QI-2EA" userLabel="MicButton">
+                                                <rect key="frame" x="0.0" y="0.0" width="78" height="60"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <state key="normal" title="Mic: Off">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="muteTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ell-gw-ovI"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hqt-Y5-okT" userLabel="VideoCamButton">
+                                                <rect key="frame" x="83" y="0.0" width="108" height="60"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <state key="normal" title="Camera: Off">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="stopVideoTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="lOX-Qr-LjB"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8J6-ij-EDQ" userLabel="BroadcastButton">
+                                                <rect key="frame" x="196" y="0.0" width="94" height="60"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <state key="normal" title="Broadcast">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="broadcastTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="6sV-DB-Rqe"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wl1-a6-9Ja" userLabel="StopButton">
+                                                <rect key="frame" x="295" y="0.0" width="63" height="60"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <inset key="contentEdgeInsets" minX="10" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
+                                                <state key="normal" title="Leave">
+                                                    <color key="titleColor" systemColor="systemRedColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="leaveTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Qxo-6S-6t2"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="8gT-Xn-REL" firstAttribute="top" secondItem="YAP-ui-sAW" secondAttribute="top" id="OR3-AP-l34"/>
+                                    <constraint firstItem="8gT-Xn-REL" firstAttribute="centerX" secondItem="YAP-ui-sAW" secondAttribute="centerX" id="Upg-DB-X5s"/>
+                                    <constraint firstItem="8gT-Xn-REL" firstAttribute="width" relation="lessThanOrEqual" secondItem="YAP-ui-sAW" secondAttribute="width" id="piv-DV-9yN"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LYB-a1-aFt" userLabel="JoinView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="165"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="G9h-99-ImO">
+                                        <rect key="frame" x="10" y="58" width="394" height="97"/>
+                                        <subviews>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s7h-ct-pgu" userLabel="TokenTextField">
+                                                <rect key="frame" x="0.0" y="0.0" width="394" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B3J-ut-7Ld" userLabel="JoinButton">
+                                                <rect key="frame" x="0.0" y="44" width="394" height="28.5"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="JOIN">
+                                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="0.0"/>
+                                                    <color key="baseBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="joinTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="vKY-mH-Chh"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="version" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Zy-0Y-weC" userLabel="Version Label">
+                                                <rect key="frame" x="0.0" y="82.5" width="394" height="14.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.1502403804321879" green="0.1502403804321879" blue="0.1502403804321879" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstItem="G9h-99-ImO" firstAttribute="leading" secondItem="LYB-a1-aFt" secondAttribute="leading" constant="10" id="8KF-Ry-KxS"/>
+                                    <constraint firstAttribute="trailing" secondItem="G9h-99-ImO" secondAttribute="trailing" constant="10" id="r3b-V1-1Wj"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1QW-7B-vYI" userLabel="StreamView">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="184.5"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="ut6-gr-GhU">
+                                        <rect key="frame" x="10" y="58" width="394" height="116.5"/>
+                                        <subviews>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Stream Key" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PoE-b0-cqq" userLabel="StreamKeyTextField">
+                                                <rect key="frame" x="0.0" y="0.0" width="394" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                            </textField>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="URL Endpoint" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="J84-A9-b6N" userLabel="EndpointTextField">
+                                                <rect key="frame" x="0.0" y="44" width="394" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TYH-9W-BhR" userLabel="startStreamButton">
+                                                <rect key="frame" x="0.0" y="88" width="394" height="28.5"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="START STREAM">
+                                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="0.0"/>
+                                                    <color key="baseBackgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="startStreamTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="RXh-EW-JkB"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.15024038040000001" green="0.15024038040000001" blue="0.15024038040000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="ut6-gr-GhU" secondAttribute="trailing" constant="10" id="LGV-a4-YAW"/>
+                                    <constraint firstItem="ut6-gr-GhU" firstAttribute="leading" secondItem="1QW-7B-vYI" secondAttribute="leading" constant="10" id="QtW-sA-xwa"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="YAP-ui-sAW" secondAttribute="trailing" id="1YW-Oe-qJf"/>
+                            <constraint firstItem="8gT-Xn-REL" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="2F7-cO-PnW"/>
+                            <constraint firstItem="LYB-a1-aFt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="2Ws-MY-ruB"/>
+                            <constraint firstItem="1QW-7B-vYI" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="34P-xa-ngm"/>
+                            <constraint firstItem="YAP-ui-sAW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Cqa-Ke-NoP"/>
+                            <constraint firstItem="LYB-a1-aFt" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="KAl-sQ-h9g"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="LYB-a1-aFt" secondAttribute="trailing" id="OKY-b0-Td4"/>
+                            <constraint firstItem="76S-tL-2RL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="QoM-K2-esj"/>
+                            <constraint firstAttribute="bottom" secondItem="YAP-ui-sAW" secondAttribute="bottom" id="R7v-hI-Fhc"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="76S-tL-2RL" secondAttribute="bottom" id="UVq-Yq-0sq"/>
+                            <constraint firstItem="LYB-a1-aFt" firstAttribute="bottom" secondItem="G9h-99-ImO" secondAttribute="bottom" constant="10" id="VMq-Fd-sRz"/>
+                            <constraint firstItem="1QW-7B-vYI" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="XaK-Pr-atS"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="YAP-ui-sAW" secondAttribute="top" constant="60" id="XyM-vs-Wdq"/>
+                            <constraint firstItem="1QW-7B-vYI" firstAttribute="bottom" secondItem="ut6-gr-GhU" secondAttribute="bottom" constant="10" id="YEZ-Lg-ORd"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="76S-tL-2RL" secondAttribute="trailing" id="dmI-SR-K0x"/>
+                            <constraint firstItem="G9h-99-ImO" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="fiD-Pv-3cH"/>
+                            <constraint firstItem="ut6-gr-GhU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="hGy-SK-rTO"/>
+                            <constraint firstItem="1QW-7B-vYI" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="mpL-cX-ryQ"/>
+                            <constraint firstItem="76S-tL-2RL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="srI-yG-ann"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="broadcastButton" destination="8J6-ij-EDQ" id="eCS-Vr-yob"/>
+                        <outlet property="collectionView" destination="76S-tL-2RL" id="ggx-iI-G93"/>
+                        <outlet property="endpointTextField" destination="J84-A9-b6N" id="gwR-gl-uIh"/>
+                        <outlet property="joinButton" destination="B3J-ut-7Ld" id="Yex-8k-nLJ"/>
+                        <outlet property="joinStageContainerView" destination="LYB-a1-aFt" id="qWR-sn-EuY"/>
+                        <outlet property="leaveButton" destination="Wl1-a6-9Ja" id="gCv-ch-zNf"/>
+                        <outlet property="micButton" destination="xt1-QI-2EA" id="f8b-y3-T68"/>
+                        <outlet property="startStreamButton" destination="TYH-9W-BhR" id="Qgr-Kr-FEw"/>
+                        <outlet property="streamKeyTextField" destination="PoE-b0-cqq" id="fYf-oV-0PQ"/>
+                        <outlet property="streamSetupContainerView" destination="1QW-7B-vYI" id="dSM-pc-4Fm"/>
+                        <outlet property="tokenTextField" destination="s7h-ct-pgu" id="QEa-XU-xco"/>
+                        <outlet property="versionLabel" destination="4Zy-0Y-weC" id="qL4-Kw-9NE"/>
+                        <outlet property="videoCamButton" destination="Hqt-Y5-okT" id="7jH-se-wRW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="128.98550724637681" y="93.75"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
