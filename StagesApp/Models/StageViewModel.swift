@@ -68,6 +68,8 @@ class StageViewModel: NSObject {
             return participantsData[0].streams as? [IVSLocalStageStream] ?? []
         }
     }
+    
+    private var statsTimer: Timer?
 
     private var broadcastSession: IVSBroadcastSession?
     
@@ -172,6 +174,8 @@ class StageViewModel: NSObject {
         UIApplication.shared.isIdleTimerDisabled = false
         destroyBroadcastSession()
         leaveStage()
+        statsTimer?.invalidate()
+        statsTimer = nil
     }
     
     @objc
@@ -285,6 +289,45 @@ class StageViewModel: NSObject {
         // Call `refreshStrategy` to trigger a refresh of all the `IVSStageStrategy` functions,
         // which after the changes above will update the subscribe type of this participant
         stage?.refreshStrategy()
+    }
+    
+    func toggleEnableStats(forParticipant participantId: String) {
+        mutatingParticipant(participantId) {
+            $0.isStatsEnabled.toggle()
+        }
+        
+        if participantsData.contains(where: { $0.isStatsEnabled }) {
+            if statsTimer == nil {
+                statsTimer = Timer.scheduledTimer(timeInterval: 1,
+                                                  target: self,
+                                                  selector: #selector(requestStats),
+                                                  userInfo: nil,
+                                                  repeats: true)
+            }
+        } else {
+            statsTimer?.invalidate()
+            statsTimer = nil
+        }
+    }
+    
+    @objc private func requestStats() {
+        participantsData.forEach { participant in
+            if participant.isLocal && participant.publishState != .published {
+                return
+            }
+            if !participant.isLocal && participant.subscribeState != .subscribed {
+                return
+            }
+            if participant.isStatsEnabled {
+                participant.streams.forEach { stream in
+                    do {
+                        try stream.requestRTCStats()
+                    } catch {
+                        print("Failed to request stats")
+                    }
+                }
+            }
+        }
     }
     
     func toggleBroadcasting() {

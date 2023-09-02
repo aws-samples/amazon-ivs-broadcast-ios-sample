@@ -7,6 +7,7 @@ import UIKit
 
 protocol ParticipantCollectionViewCellDelegate: AnyObject {
     func toggleAudioOnlySubscribe(forParticipant participantId: String)
+    func toggleEnableStats(forParticipant participantId: String)
 }
 
 class ParticipantCollectionViewCell: UICollectionViewCell {
@@ -20,6 +21,10 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
     @IBOutlet private var publishStateImageView: UIImageView!
     @IBOutlet private var subscribeStateImageView: UIImageView!
     @IBOutlet private var audioOnlyButton: UIButton!
+    @IBOutlet private var statsButton: UIButton!
+    @IBOutlet private var commonStatsTextView: UITextView!
+    @IBOutlet private var videoStatsTextView: UITextView!
+    @IBOutlet private var audioStatsTextView: UITextView!
     
     weak var delegate: ParticipantCollectionViewCellDelegate?
     
@@ -74,7 +79,14 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
         didSet { audioOnlyButton.setTitle("Audio Only:\n\(isAudioOnly ? "YES" : "NO")", for: .normal) }
     }
     
+    private var isStatsEnabled: Bool = false {
+        didSet { statsButton.setTitle("Stats: \(isStatsEnabled ? "ON" : "OFF")", for: .normal) }
+    }
+    
     private var registeredStreams: Set<IVSStageStream> = []
+    
+    private let videoStatsBuilder: StatsBuilder = .init()
+    private let audioStatsBuilder: StatsBuilder = .init()
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -83,6 +95,7 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
         audioStateWrapperView.layer.cornerRadius = 25
         stateSummaryView.layer.cornerRadius = 5
         audioOnlyButton.layer.cornerRadius = 5
+        statsButton.layer.cornerRadius = 5
         contentView.layer.cornerRadius = 10
         contentView.layer.borderColor = UIColor.green.cgColor
         contentView.layer.borderWidth = 1
@@ -134,9 +147,17 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
         }
         // Even if it's the same audio stream as last time, it is possible the muted flag has changed.
         isAudioMuted = newAudioStream?.isMuted ?? false
+        
+        isStatsEnabled = participant.isStatsEnabled
+        videoStatsBuilder.isLocal = isLocal
+        audioStatsBuilder.isLocal = isLocal
+        commonStatsTextView.isHidden = !participant.isStatsEnabled
+        videoStatsTextView.isHidden = !participant.isStatsEnabled
+        audioStatsTextView.isHidden = !participant.isStatsEnabled
     }
     
     func toggleEditMode() {
+        statsButton.isHidden.toggle()
         guard isLocal == false else { return }
         audioOnlyButton.isHidden.toggle()
     }
@@ -209,6 +230,10 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
         delegate?.toggleAudioOnlySubscribe(forParticipant: participantId)
     }
 
+    @IBAction func statsButtonTapped(_ sender: UIButton) {
+        guard let participantId = participantId else { return }
+        delegate?.toggleEnableStats(forParticipant: participantId)
+    }
 }
 
 extension ParticipantCollectionViewCell: IVSStageStreamDelegate {
@@ -223,6 +248,23 @@ extension ParticipantCollectionViewCell: IVSStageStreamDelegate {
     
     func stream(_ stream: IVSStageStream, didGenerateRTCStats stats: [String : [String : String]]) {
         // Can receive RTC stats after calling `requestRTCStats()`
+        if stream.device is IVSImageDevice {
+            guard videoStatsBuilder.isNew(stats) else {
+                return
+            }
+            videoStatsBuilder.stats = stats
+            videoStatsTextView.text = "VIDEO\n" + videoStatsBuilder.statsString
+            videoStatsTextView.sizeToFit()
+        } else if stream.device is IVSAudioDevice {
+            guard audioStatsBuilder.isNew(stats) else {
+                return
+            }
+            audioStatsBuilder.stats = stats
+            commonStatsTextView.text = audioStatsBuilder.commonStatsString
+            commonStatsTextView.sizeToFit()
+            audioStatsTextView.text = "AUDIO\n" + audioStatsBuilder.statsString
+            audioStatsTextView.sizeToFit()
+        }
     }
     
 }

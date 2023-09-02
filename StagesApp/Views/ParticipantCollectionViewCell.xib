@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,7 +23,7 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Camera Off" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rhz-ER-0jM" userLabel="Video State Label">
-                        <rect key="frame" x="80.333333333333314" y="117.99999999999999" width="83.666666666666686" height="20.333333333333329"/>
+                        <rect key="frame" x="80.333333333333314" y="101" width="83.666666666666686" height="20.333333333333329"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
@@ -112,23 +112,70 @@ NO</string>
                             <action selector="audioOnlyButtonTapped:" destination="gTV-IL-0wX" eventType="touchUpInside" id="VdE-UA-wfr"/>
                         </connections>
                     </button>
+                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="OjV-Gx-ADs">
+                        <rect key="frame" x="173" y="110" width="63" height="36"/>
+                        <color key="backgroundColor" systemColor="systemBlueColor"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="36" id="dAT-O9-BXk"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <inset key="contentEdgeInsets" minX="4" minY="0.0" maxX="4" maxY="0.0"/>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" title="Stats: OFF"/>
+                        <connections>
+                            <action selector="statsButtonTapped:" destination="gTV-IL-0wX" eventType="touchUpInside" id="gNg-Bn-sDk"/>
+                        </connections>
+                    </button>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="76" placeholderIntrinsicHeight="25" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ae6-fE-543">
+                        <rect key="frame" x="4" y="33" width="76" height="25"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="76" placeholderIntrinsicHeight="25" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XTK-hU-UHa">
+                        <rect key="frame" x="4" y="62" width="76" height="25"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="76" placeholderIntrinsicHeight="25" scrollEnabled="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rQX-te-su8">
+                        <rect key="frame" x="4" y="91" width="76" height="25"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="N7Q-I6-ycO" secondAttribute="bottom" id="5Hd-pe-EoW"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="rQX-te-su8" secondAttribute="bottom" constant="4" id="60v-qv-x0D"/>
                 <constraint firstItem="5BA-TH-cCu" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="4" id="AGo-Bv-L1L"/>
                 <constraint firstItem="oHx-JH-guS" firstAttribute="top" secondItem="REi-7M-WtG" secondAttribute="bottom" constant="8" id="BmW-pW-TWF"/>
+                <constraint firstItem="XTK-hU-UHa" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="4" id="EBi-Ez-ONi"/>
                 <constraint firstAttribute="trailing" secondItem="N7Q-I6-ycO" secondAttribute="trailing" id="ECZ-aM-Lg9"/>
                 <constraint firstItem="5BA-TH-cCu" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="4" id="Fj8-bG-E9R"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="rQX-te-su8" secondAttribute="trailing" constant="4" id="Fjk-e2-FEi"/>
                 <constraint firstAttribute="bottom" secondItem="TaU-oJ-OLj" secondAttribute="bottom" constant="8" id="HSW-ZS-QLe"/>
+                <constraint firstItem="OjV-Gx-ADs" firstAttribute="top" secondItem="oHx-JH-guS" secondAttribute="bottom" constant="8" id="JpF-ll-0V6"/>
                 <constraint firstItem="N7Q-I6-ycO" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Lby-mP-BLB"/>
+                <constraint firstItem="rQX-te-su8" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="4" id="M3s-C4-nfR"/>
+                <constraint firstItem="XTK-hU-UHa" firstAttribute="top" secondItem="ae6-fE-543" secondAttribute="bottom" constant="4" id="Uds-zO-KbF"/>
                 <constraint firstAttribute="trailing" secondItem="REi-7M-WtG" secondAttribute="trailing" constant="8" id="UeG-yB-IRL"/>
                 <constraint firstItem="N7Q-I6-ycO" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="VIL-3d-AOl"/>
                 <constraint firstItem="Rhz-ER-0jM" firstAttribute="centerY" secondItem="ZTg-uK-7eu" secondAttribute="centerY" id="XQC-vQ-Gzt"/>
                 <constraint firstItem="TaU-oJ-OLj" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="8" id="YmX-4g-MoS"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ae6-fE-543" secondAttribute="trailing" constant="4" id="bUT-3f-dVt"/>
+                <constraint firstAttribute="trailing" secondItem="OjV-Gx-ADs" secondAttribute="trailing" constant="8" id="bvn-XD-iWY"/>
+                <constraint firstItem="ae6-fE-543" firstAttribute="top" secondItem="5BA-TH-cCu" secondAttribute="bottom" constant="4" id="dLX-Xk-zGu"/>
                 <constraint firstItem="REi-7M-WtG" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="8" id="fR4-CP-vwz"/>
                 <constraint firstAttribute="trailing" secondItem="oHx-JH-guS" secondAttribute="trailing" constant="8" id="gTb-JE-94W"/>
+                <constraint firstItem="ae6-fE-543" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="4" id="j6b-Cf-jtF"/>
+                <constraint firstItem="rQX-te-su8" firstAttribute="top" secondItem="XTK-hU-UHa" secondAttribute="bottom" constant="4" id="jd0-NT-Qnb"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="XTK-hU-UHa" secondAttribute="trailing" constant="4" id="u57-Hf-ybt"/>
                 <constraint firstItem="Rhz-ER-0jM" firstAttribute="centerX" secondItem="ZTg-uK-7eu" secondAttribute="centerX" id="wdD-4v-cQl"/>
             </constraints>
             <size key="customSize" width="244" height="209"/>
@@ -136,12 +183,16 @@ NO</string>
                 <outlet property="VideoStateLabel" destination="Rhz-ER-0jM" id="sZN-Cj-5Rb"/>
                 <outlet property="audioOnlyButton" destination="oHx-JH-guS" id="Uje-WG-CUZ"/>
                 <outlet property="audioStateWrapperView" destination="REi-7M-WtG" id="bPW-bh-jJJ"/>
+                <outlet property="audioStatsTextView" destination="rQX-te-su8" id="fwd-q5-13H"/>
+                <outlet property="commonStatsTextView" destination="ae6-fE-543" id="tlV-IW-XzN"/>
                 <outlet property="participantIdLabel" destination="ofy-J4-xi9" id="L2L-2b-RXi"/>
                 <outlet property="participantIdWrapperView" destination="5BA-TH-cCu" id="GnY-oF-Sr1"/>
                 <outlet property="previewView" destination="N7Q-I6-ycO" id="5zN-2W-D0R"/>
                 <outlet property="publishStateImageView" destination="iJi-Je-Ef2" id="3Pv-PP-OMl"/>
                 <outlet property="stateSummaryView" destination="TaU-oJ-OLj" id="wIs-Wq-GwA"/>
+                <outlet property="statsButton" destination="OjV-Gx-ADs" id="Y4w-SV-bEZ"/>
                 <outlet property="subscribeStateImageView" destination="YbA-fI-Kuv" id="lNA-nt-SY9"/>
+                <outlet property="videoStatsTextView" destination="XTK-hU-UHa" id="qFu-Lz-Z7M"/>
             </connections>
             <point key="canvasLocation" x="12" y="61"/>
         </collectionViewCell>

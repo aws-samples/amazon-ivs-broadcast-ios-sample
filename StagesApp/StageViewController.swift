@@ -198,4 +198,7 @@ extension StageViewController: ParticipantCollectionViewCellDelegate {
         viewModel.toggleAudioOnlySubscribe(forParticipant: participantId)
     }
     
+    func toggleEnableStats(forParticipant participantId: String) {
+        viewModel.toggleEnableStats(forParticipant: participantId)
+    }
 }

@@ -12,6 +12,7 @@
 		86D6D9982819CD48000EF98C /* FilterHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D6D9972819CD48000EF98C /* FilterHelper.swift */; };
 		86EA9E0828060DA100A59209 /* ColorFilterRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86EA9E0728060DA100A59209 /* ColorFilterRenderer.swift */; };
 		B54DBD5A9E097A779373CE7E /* libPods-ScreenCapture.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E21AB19670C32EA72E03B71E /* libPods-ScreenCapture.a */; };
+		C296DB452AA102B20046CA11 /* StatsBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C296DB442AA102B20046CA11 /* StatsBuilder.swift */; };
 		D919EB6E97675389822EB4CB /* libPods-BasicBroadcast.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 97AD6CEC40B1754ADA708C86 /* libPods-BasicBroadcast.a */; };
 		EA04C030278880D300B7F6E4 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA04C02F278880D300B7F6E4 /* TableViewController.swift */; };
 		EA1B1529278CCDA7002DC2E3 /* ShowHideTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA1B1528278CCDA7002DC2E3 /* ShowHideTextField.swift */; };
@@ -82,6 +83,7 @@
 		86EA9E0728060DA100A59209 /* ColorFilterRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorFilterRenderer.swift; sourceTree = "<group>"; };
 		91A536620470F577FD7062CB /* Pods-ScreenCapture.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScreenCapture.release.xcconfig"; path = "Target Support Files/Pods-ScreenCapture/Pods-ScreenCapture.release.xcconfig"; sourceTree = "<group>"; };
 		97AD6CEC40B1754ADA708C86 /* libPods-BasicBroadcast.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BasicBroadcast.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C296DB442AA102B20046CA11 /* StatsBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsBuilder.swift; sourceTree = "<group>"; };
 		DBE51101647D603F51EF2DC4 /* Pods-StagesApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StagesApp.release.xcconfig"; path = "Target Support Files/Pods-StagesApp/Pods-StagesApp.release.xcconfig"; sourceTree = "<group>"; };
 		E21AB19670C32EA72E03B71E /* libPods-ScreenCapture.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ScreenCapture.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EA04C02F278880D300B7F6E4 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
@@ -282,6 +284,7 @@
 				F8CD98DD29B8D7BD00F43D0E /* ParticipantCollectionViewLayout.swift */,
 				F8CD98DE29B8D7BD00F43D0E /* Utils.swift */,
 				F8CD98DF29B8D7BD00F43D0E /* Observable.swift */,
+				C296DB442AA102B20046CA11 /* StatsBuilder.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -582,6 +585,7 @@
 				F8CD98EE29B8D7BD00F43D0E /* ParticipantCollectionViewLayout.swift in Sources */,
 				F8CD98ED29B8D7BD00F43D0E /* StageLayoutCalculator.swift in Sources */,
 				F8CD98F029B8D7BD00F43D0E /* Observable.swift in Sources */,
+				C296DB452AA102B20046CA11 /* StatsBuilder.swift in Sources */,
 				F8CD98F129B8D7BD00F43D0E /* ParticipantCollectionViewCell.swift in Sources */,
 				F8CD98F429B8D7BD00F43D0E /* StageViewModel.swift in Sources */,
 				F8CD98F629B8D7BD00F43D0E /* AppDelegate.swift in Sources */,

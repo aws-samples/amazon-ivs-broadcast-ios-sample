@@ -32,6 +32,8 @@ struct ParticipantData {
         }
     }
 
+    var isStatsEnabled = false
+
     init(isLocal: Bool, participantId: String?) {
         self.isLocal = isLocal
         self.participantId = participantId
