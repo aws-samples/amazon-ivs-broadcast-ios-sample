@@ -510,14 +510,13 @@ private class RTCOutboundRTPStreamStats: RTCRTPStreamStats {
     
     var mediaSourceId: String? { stats.stringValue("mediaSourceId") }
     var remoteId: String? { stats.stringValue("remoteId") }
-    var trackIdentifier: String? { stats.stringValue("trackIdentifier") }
     var mid: String? { stats.stringValue("mid") }
     var rid: String? { stats.stringValue("rid") }
     var packetsSent: UInt32? { stats.uint32Value("packetsSent") }
     var retransmittedPacketsSent: UInt64? { stats.uint64Value("retransmittedPacketsSent") }
     var bytesSent: UInt64? { stats.uint64Value("bytesSent") }
     var headerBytesSent: UInt64? { stats.uint64Value("headerBytesSent") }
-    var UInt64: String? { stats.stringValue("retransmittedBytesSent") }
+    var retransmittedBytesSent: UInt64? { stats.uint64Value("retransmittedBytesSent") }
     var targetBitrate: Double? { stats.doubleValue("targetBitrate") }
     var framesEncoded: UInt32? { stats.uint32Value("framesEncoded") }
     var keyFramesEncoded: UInt32? { stats.uint32Value("keyFramesEncoded") }
