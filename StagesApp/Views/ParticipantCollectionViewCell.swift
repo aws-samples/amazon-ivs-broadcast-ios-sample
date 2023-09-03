@@ -22,9 +22,10 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
     @IBOutlet private var subscribeStateImageView: UIImageView!
     @IBOutlet private var audioOnlyButton: UIButton!
     @IBOutlet private var statsButton: UIButton!
-    @IBOutlet private var commonStatsTextView: UITextView!
-    @IBOutlet private var videoStatsTextView: UITextView!
-    @IBOutlet private var audioStatsTextView: UITextView!
+    @IBOutlet private var statsWrapperView: UIView!
+    @IBOutlet private var commonStatsLabel: UILabel!
+    @IBOutlet private var videoStatsLabel: UILabel!
+    @IBOutlet private var audioStatsLabel: UILabel!
     
     weak var delegate: ParticipantCollectionViewCellDelegate?
     
@@ -96,6 +97,7 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
         stateSummaryView.layer.cornerRadius = 5
         audioOnlyButton.layer.cornerRadius = 5
         statsButton.layer.cornerRadius = 5
+        statsWrapperView.layer.cornerRadius = 5
         contentView.layer.cornerRadius = 10
         contentView.layer.borderColor = UIColor.green.cgColor
         contentView.layer.borderWidth = 1
@@ -151,9 +153,7 @@ class ParticipantCollectionViewCell: UICollectionViewCell {
         isStatsEnabled = participant.isStatsEnabled
         videoStatsBuilder.isLocal = isLocal
         audioStatsBuilder.isLocal = isLocal
-        commonStatsTextView.isHidden = !participant.isStatsEnabled
-        videoStatsTextView.isHidden = !participant.isStatsEnabled
-        audioStatsTextView.isHidden = !participant.isStatsEnabled
+        statsWrapperView.isHidden = !participant.isStatsEnabled
     }
     
     func toggleEditMode() {
@@ -253,17 +253,17 @@ extension ParticipantCollectionViewCell: IVSStageStreamDelegate {
                 return
             }
             videoStatsBuilder.stats = stats
-            videoStatsTextView.text = "VIDEO\n" + videoStatsBuilder.statsString
-            videoStatsTextView.sizeToFit()
+            videoStatsLabel.text = "-VIDEO-\n" + videoStatsBuilder.statsString
+            videoStatsLabel.sizeToFit()
         } else if stream.device is IVSAudioDevice {
             guard audioStatsBuilder.isNew(stats) else {
                 return
             }
             audioStatsBuilder.stats = stats
-            commonStatsTextView.text = audioStatsBuilder.commonStatsString
-            commonStatsTextView.sizeToFit()
-            audioStatsTextView.text = "AUDIO\n" + audioStatsBuilder.statsString
-            audioStatsTextView.sizeToFit()
+            commonStatsLabel.text = audioStatsBuilder.commonStatsString
+            commonStatsLabel.sizeToFit()
+            audioStatsLabel.text = "-AUDIO-\n" + audioStatsBuilder.statsString
+            audioStatsLabel.sizeToFit()
         }
     }
     

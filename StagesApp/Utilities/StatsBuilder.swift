@@ -114,7 +114,7 @@ class StatsBuilder {
                         result.append("\(tab)Rtt: \(rtt.msec()) ms\n")
                     }
                     if let rate = calculatePacketLoss(packetsLost: remoteInboundRtp.packetsLost, packetsSent: outboundRtp.packetsSent) {
-                        result.append("\(tab)Packet Loss \(rate.percent())\n")
+                        result.append("\(tab)Packet Loss: \(rate.percent())\n")
                     }
                 }
             case RTCInboundRTPStreamStats.kType:
@@ -154,14 +154,14 @@ class StatsBuilder {
                         result.append("Rtt: \(rtt.msec()) ms\n")
                     }
                     if let rate = calculatePacketLoss(packetsLost: inboundRtp.packetsLost, packetsSent: remoteOutboundRtp.packetsSent) {
-                        result.append("Packet Loss \(rate.percent())\n")
+                        result.append("Packet Loss: \(rate.percent())\n")
                     }
                 }
                 // video doesn't have remote-outbound-rtp
                 else if let packetsLost = inboundRtp.packetsLost,
                         let packetsReceived = inboundRtp.packetsReceived,
                         let rate = calculatePacketLoss(packetsLost: packetsLost, packetsSent: UInt32(packetsLost) + packetsReceived) {
-                    result.append("Packet Loss \(rate.percent())\n")
+                    result.append("Packet Loss: \(rate.percent())\n")
                 }
             default:
                 break
