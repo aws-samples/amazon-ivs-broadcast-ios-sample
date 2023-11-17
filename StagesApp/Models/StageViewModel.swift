@@ -118,11 +118,10 @@ class StageViewModel: NSObject {
         let devices = IVSDeviceDiscovery().listLocalDevices()
         camera = devices.compactMap({ $0 as? IVSCamera }).first
         microphone = devices.compactMap({ $0 as? IVSMicrophone }).first
-        
-        // Enable echo cancellation for microphone device for iOS 13 and later
-        if #available(iOS 13.0, *) {
-            microphone?.isEchoCancellationEnabled = true
-        }
+
+        // Use `IVSStageAudioManager` to control the underlying AVAudioSession instance. The presets provided
+        // by the IVS SDK make optimizing the audio configuration for different use-cases easy.
+        IVSStageAudioManager.sharedInstance().setPreset(.videoChat)
 
         super.init()
 
@@ -152,7 +151,7 @@ class StageViewModel: NSObject {
             }
             
             // Add stream with local image device to localStreams
-            localStreams.append(IVSLocalStageStream(device: camera, configuration: IVSLocalStageStreamVideoConfiguration()))
+            localStreams.append(IVSLocalStageStream(device: camera, config: IVSLocalStageStreamConfiguration()))
         }
 
         if let microphone = microphone {
