@@ -2,12 +2,12 @@ workspace 'BasicBroadcast'
 
 def amazonIVS
   platform :ios, '12.0'
-  pod 'AmazonIVSBroadcast', '1.22.0'
+  pod 'AmazonIVSBroadcast', '1.23.0'
 end
 
 def amazonIVSStages
   platform :ios, '14.0'
-  pod 'AmazonIVSBroadcast/Stages', '1.22.0'
+  pod 'AmazonIVSBroadcast/Stages', '1.23.0'
 end
 
 target 'BasicBroadcast' do
