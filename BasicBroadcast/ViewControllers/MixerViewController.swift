@@ -20,121 +20,107 @@ class MixerViewController: UIViewController {
 
     @IBOutlet private var previewView: UIView!
 
-    // This broadcast session is the main interaction point with the SDK
-    private var broadcastSession: IVSBroadcastSession?
+    private let deviceDiscovery = IVSDeviceDiscovery()
+    private var mixedImageDevice: IVSMixedImageDevice?
 
     private var cameraIsSmall = true
 
-    private var cameraSlot: IVSMixerSlotConfiguration!
-    private var contentSlot: IVSMixerSlotConfiguration!
-    private var logoSlot: IVSMixerSlotConfiguration!
+    private var cameraSource: IVSMixedImageDeviceSource?
+    private var contentSource: IVSMixedImageDeviceSource?
+    private var logoSource: IVSMixedImageDeviceSource?
 
     private var playerLink: AVPlayerCustomImageSource?
-    private var logoSource: IVSCustomImageSource?
 
-    private func setupSession() {
+    private func setupMixedDevice() {
         do {
             // Create a custom configuration at 720p60, with transparency enabled (higher memory usage, but needed for the logo watermark).
-            let config = IVSBroadcastConfiguration()
-            try config.video.setSize(MixerGuide.bigSize)
-            try config.video.setTargetFramerate(60)
-            config.video.enableTransparency = true
+            let config = IVSMixedImageDeviceConfiguration()
+            config.size = MixerGuide.bigSize
+            try config.setTargetFramerate(60)
+            config.isTransparencyEnabled = true
+            let mixedImageDevice = deviceDiscovery.createMixedImageDevice(with: config)
 
-            // This slot will hold the camera and start in the bottom left corner of the stream. It will move during the transition.
-            cameraSlot = IVSMixerSlotConfiguration()
-            cameraSlot.size = MixerGuide.smallSize
-            cameraSlot.position = MixerGuide.smallPositionBottomLeft
-            cameraSlot.preferredVideoInput = .camera
-            cameraSlot.zIndex = 2
-            try cameraSlot.setName("camera")
+            // This source will hold the camera and start in the bottom left corner of the stream. It will move during the transition.
+            let cameraConfig = IVSMixedImageDeviceSourceConfiguration()
+            cameraConfig.size = MixerGuide.smallSize
+            cameraConfig.position = MixerGuide.smallPositionBottomLeft
+            cameraConfig.zIndex = 2
+            if let camera = deviceDiscovery.listLocalDevices().compactMap({ $0 as? IVSCamera }).first {
+                let cameraSource = IVSMixedImageDeviceSource(configuration: cameraConfig, device: camera)
+                mixedImageDevice.add(cameraSource)
+                self.cameraSource = cameraSource
+            }
 
-            // This slot will hold custom content (in this example, an mp4 video) and take up the entire stream. It will move during the transition.
-            contentSlot = IVSMixerSlotConfiguration()
-            contentSlot.size = MixerGuide.bigSize
-            contentSlot.position = MixerGuide.bigPosition
-            contentSlot.preferredVideoInput = .userImage
-            contentSlot.zIndex = 1
-            try contentSlot.setName("content")
 
-            // This slot will be a logo-based watermark and sit in the bottom right corner of the stream. It will not move around.
-            logoSlot = IVSMixerSlotConfiguration()
-            logoSlot.size = CGSize(width: MixerGuide.smallSize.height, height: MixerGuide.smallSize.height) // 1:1 aspect ratio
-            logoSlot.position = CGPoint(x: MixerGuide.bigSize.width - MixerGuide.smallSize.height - MixerGuide.borderWidth, y: MixerGuide.smallPositionBottomRight.y)
-            logoSlot.preferredVideoInput = .userImage
-            logoSlot.zIndex = 3
-            try logoSlot.setTransparency(0.7)
-            try logoSlot.setName("logo")
+            // This source will hold custom content (in this example, an mp4 video) and take up the entire stream. It will move during the transition.
+            let contentConfig = IVSMixedImageDeviceSourceConfiguration()
+            contentConfig.size = MixerGuide.bigSize
+            contentConfig.position = MixerGuide.bigPosition
+            contentConfig.zIndex = 1
 
-            config.mixer.slots = [
-                cameraSlot,
-                contentSlot,
-                logoSlot,
-            ]
+            let contentDevice = deviceDiscovery.createImageSource(withName: "content")
+            let url = Bundle.main.url(forResource: "ivs", withExtension: "mp4")!
+            playerLink = AVPlayerCustomImageSource(videoURL: url, imageSource: contentDevice)
 
-            let broadcastSession = try IVSBroadcastSession(configuration: config, descriptors: nil, delegate: nil)
+            let contentSource = IVSMixedImageDeviceSource(configuration: contentConfig, device: contentDevice)
+            mixedImageDevice.add(contentSource)
+            self.contentSource = contentSource
+
+
+            // This source will be a logo-based watermark and sit in the bottom right corner of the stream. It will not move around.
+            let logoConfig = IVSMixedImageDeviceSourceConfiguration()
+            logoConfig.size = CGSize(width: MixerGuide.smallSize.height, height: MixerGuide.smallSize.height) // 1:1 aspect ratio
+            logoConfig.position = CGPoint(x: MixerGuide.bigSize.width - MixerGuide.smallSize.height - MixerGuide.borderWidth, y: MixerGuide.smallPositionBottomRight.y)
+            logoConfig.zIndex = 3
+            try logoConfig.setAlpha(0.3)
+
+            let logoDevice = deviceDiscovery.createImageSource(withName: "logo")
+            sendImageToSource(name: "ivs", width: Int(logoConfig.size.width), height: Int(logoConfig.size.height), source: logoDevice)
+            let logoSource = IVSMixedImageDeviceSource(configuration: logoConfig, device: logoDevice)
+            mixedImageDevice.add(logoSource)
+            self.logoSource = logoSource
 
             // This creates a preview of the composited output stream, not an individual source. Because of this there is small
             // amount of delay in the preview since it has to go through a render cycle to composite the sources together.
             // It is also important to note that because our configuration is for a landscape stream using the "fit" aspect mode
             // there will be aggressive letterboxing when holding an iPhone in portrait. Rotating to landscape or using an iPad
             // will provide a larger preview, though the only change is the scaling.
-            let preview = try broadcastSession.previewView(with: .fit)
+            let preview = try mixedImageDevice.previewView(with: .fit)
             attachCameraPreview(container: previewView, preview: preview)
 
-            // Attach devices to each slot manually based on the slot names
-
-            let frontCamera = IVSBroadcastSession.listAvailableDevices()
-                .filter { $0.type == .camera && $0.position == .front }
-                .first
-            if let camera = frontCamera {
-                broadcastSession.attach(camera, toSlotWithName: cameraSlot.name, onComplete: nil)
-            }
-
-            let contentSource = broadcastSession.createImageSource(withName: contentSlot.name)
-            broadcastSession.attach(contentSource, toSlotWithName: contentSlot.name)
-            let url = Bundle.main.url(forResource: "ivs", withExtension: "mp4")!
-            playerLink = AVPlayerCustomImageSource(videoURL: url, imageSource: contentSource)
-
-            let logoSource = broadcastSession.createImageSource(withName: logoSlot.name)
-            broadcastSession.attach(logoSource, toSlotWithName: logoSlot.name) { [weak self] _ in
-                guard let `self` = self else { return }
-                sendImageToSource(name: "ivs", width: Int(self.logoSlot.size.width), height: Int(self.logoSlot.size.height), source: logoSource)
-            }
-            self.logoSource = logoSource
-
-            self.broadcastSession = broadcastSession
+            self.mixedImageDevice = mixedImageDevice
         } catch {
-            displayErrorAlert(error, "setting up session")
+            displayErrorAlert(error, "setting up device")
         }
     }
 
     @objc
-    private func swapSlots() {
-        // Swap the camera and content slots
-        guard let session = broadcastSession else { return }
+    private func swapSources() {
+        // Swap the camera and content sources
+        guard let cameraSource = self.cameraSource, let contentSource = self.contentSource else { return }
 
-        // First we are going to change the size, position, and zIndex of our existing slot models
+        // First we are going to change the size, position, and zIndex of our existing source models
         // so that the camera swaps between the bottom left corner and full screen
-        cameraSlot.position = cameraIsSmall ? MixerGuide.bigPosition : MixerGuide.smallPositionBottomLeft
-        cameraSlot.size = cameraIsSmall ? MixerGuide.bigSize : MixerGuide.smallSize
-        cameraSlot.zIndex = cameraIsSmall ? 1 : 2
-        // And the content slot swaps between full screen and the top right corner.
-        contentSlot.position = cameraIsSmall ? MixerGuide.smallPositionTopRight : MixerGuide.bigPosition
-        contentSlot.size = cameraIsSmall ? MixerGuide.smallSize : MixerGuide.bigSize
-        contentSlot.zIndex = cameraIsSmall ? 2 : 1
+        let newCameraConfig = cameraSource.configuration
+        newCameraConfig.position = cameraIsSmall ? MixerGuide.bigPosition : MixerGuide.smallPositionBottomLeft
+        newCameraConfig.size = cameraIsSmall ? MixerGuide.bigSize : MixerGuide.smallSize
+        newCameraConfig.zIndex = cameraIsSmall ? 1 : 2
+
+        // And the content source swaps between full screen and the top right corner.
+        let newContentConfig = contentSource.configuration
+        newContentConfig.position = cameraIsSmall ? MixerGuide.smallPositionTopRight : MixerGuide.bigPosition
+        newContentConfig.size = cameraIsSmall ? MixerGuide.smallSize : MixerGuide.bigSize
+        newContentConfig.zIndex = cameraIsSmall ? 2 : 1
         cameraIsSmall.toggle()
-        // This is the API that actually causes the slots to animate, just changing the properties above will not do anything.
-        // We call transitionSlot on both slots at the same time so the animations happen in parallel.
-        var success = session.mixer.transitionSlot(withName: cameraSlot.name, toState: cameraSlot, duration: 0.5)
-        // This will short-circuit, so if the first transition fails the second won't execute.
-        success = success && session.mixer.transitionSlot(withName: contentSlot.name, toState: contentSlot, duration: 0.5)
-        if !success {
-            print("⚠️⚠️ Something went wrong executing the transitions. Make sure the provided slot names have matching, attached slots ⚠️⚠️")
-        }
+
+        // This is the API that actually causes the sources to animate, just changing the properties above will not do anything.
+        // We call transition on both sources at the same time so the animations happen in parallel.
+        cameraSource.transition(to: newCameraConfig, duration: 0.5)
+        contentSource.transition(to: newContentConfig, duration: 0.5)
     }
 
     // MARK: - Non SDK related code
-    // The below code is AV code that powers the slots, but isn't needed for SDK usage. To keep how SDK APIs
+    // The below code is AV code that powers the sources, but isn't needed for SDK usage. To keep how SDK APIs
     // grouped together and as clean as possible, all the "extra" code is down here.
 
     private var displayLink: CADisplayLink!
@@ -142,8 +128,8 @@ class MixerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Tapping on the preview image will swap the small and big slots with an animated transition
-        let tap = UITapGestureRecognizer(target: self, action: #selector(swapSlots))
+        // Tapping on the preview image will swap the small and big sources with an animated transition
+        let tap = UITapGestureRecognizer(target: self, action: #selector(swapSources))
         previewView.addGestureRecognizer(tap)
     }
 
@@ -156,8 +142,8 @@ class MixerViewController: UIViewController {
 
         checkAVPermissions { [weak self] granted in
             if granted {
-                if self?.broadcastSession == nil {
-                    self?.setupSession()
+                if self?.mixedImageDevice == nil {
+                    self?.setupMixedDevice()
                 }
             } else {
                 self?.displayPermissionError()
@@ -259,7 +245,7 @@ private func sampleBufferFromPixelBuffer(_ pixelBuffer: CVPixelBuffer) -> CMSamp
         return nil
     }
     // For images, the timing information on CMSampleBuffers is not necessary, the most recently
-    // received image per slot will be processed in the next render loop.
+    // received image per source will be processed in the next render loop.
     // For audio however, timing is required and is critical to a smooth audio track.
     var info = CMSampleTimingInfo()
     info.presentationTimeStamp = .invalid
