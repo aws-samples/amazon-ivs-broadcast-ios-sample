@@ -6,8 +6,9 @@ import UIKit
 import AmazonIVSBroadcast
 import AVFoundation
 
+@available(iOS 13.0, *)
 class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, AVCaptureAudioDataOutputSampleBufferDelegate {
-
+    
     @IBOutlet private var endpointField: UITextField!
     @IBOutlet private var streamKeyField: UITextField!
     @IBOutlet private var startButton: UIButton!
@@ -29,18 +30,23 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
     
     // This broadcast session is the main interaction point with the SDK
     private var broadcastSession: IVSBroadcastSession?
+    private var broadcastConfig: IVSBroadcastConfiguration?
 
     private var customAudioSource: IVSCustomAudioSource?
     private var customImageSource: IVSCustomImageSource?
+    private var secondaryImageSource: IVSCustomImageSource?
 
     private var audioOutput: AVCaptureOutput?
     private var videoOutput: AVCaptureOutput?
+    private var secondaryVideoOutput: AVCaptureOutput?
 
     private var captureSession: AVCaptureSession?
+    private var multiCamSession: AVCaptureMultiCamSession?
 
     private var orientation: AVCaptureVideoOrientation = .portrait
 
     private let queue = DispatchQueue(label: "media-queue")
+    private let secondaryQueue = DispatchQueue(label: "secondary-media-queue")
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -92,10 +98,7 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
             try config.video.setSize(CGSize(width: 720, height: 1280))
             try config.video.setTargetFramerate(60)
 
-            // This slot will eventually bind to a custom image and audio source. This will be done manually after the creation
-            // of the IVSBroadcastSession. In order to bind custom sources, make sure the `preferredAudioInput` and `preferredVideoInput`
-            // properties of the slot are set to `userAudio` and `userImage` respectively. This will allow both of our custom
-            // sources to bind to the same slot.
+            // Primary slot for back camera (full screen)
             let customSlot = IVSMixerSlotConfiguration()
             customSlot.size = config.video.size
             customSlot.position = CGPoint(x: 0, y: 0)
@@ -103,7 +106,20 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
             customSlot.preferredVideoInput = .userImage
             try customSlot.setName("custom-slot")
 
-            config.mixer.slots = [customSlot]
+            // Secondary slot for front camera (picture-in-picture style)
+            // Position it in the top-right corner at 1/4 size
+            let secondarySlot = IVSMixerSlotConfiguration()
+            let pipSize = CGSize(width: 180, height: 320) // 1/4 of 720x1280
+            secondarySlot.size = pipSize
+            secondarySlot.position = CGPoint(x: config.video.size.width - pipSize.width - 20, y: 20)
+            secondarySlot.preferredVideoInput = .userImage
+            secondarySlot.zIndex = 1 // Place on top of primary camera
+            try secondarySlot.setName("secondary-slot")
+
+            config.mixer.slots = [customSlot, secondarySlot]
+
+            // Store configuration for later reference
+            self.broadcastConfig = config
 
             // Our AVCaptureSession will be managing the AVAudioSession independently
             IVSBroadcastSession.applicationAudioSessionStrategy = .noAction
@@ -111,21 +127,22 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
                                                            descriptors: nil,
                                                            delegate: self)
 
-            // Create custom audio and image sources by requesting them from the IVSBroadcastSession.
-            // These can be given any name, but will both be attached to the slot that was configured above.
-            // Custom sources are useful because they allow the host application to provide any type of image
-            // and audio data directly to the SDK. In this example, we provide camera and microphone input
-            // managed by a local AVCaptureSession, instead of letting the SDK control those devices.
-            // However you can also provide MP4 video data or static image data as seen in `MixerViewController`.
+            // Create custom audio source for microphone
             let customAudioSource = broadcastSession.createAudioSource(withName: "custom-audio")
             broadcastSession.attach(customAudioSource, toSlotWithName: "custom-slot")
             self.customAudioSource = customAudioSource
 
+            // Create primary image source for back camera
             let customImageSource = broadcastSession.createImageSource(withName: "custom-image")
             broadcastSession.attach(customImageSource, toSlotWithName: "custom-slot")
             self.customImageSource = customImageSource
 
-            // We can still preview custom sources. This will act similar to a direct camera preview, just using the SDK as the GPU layer.
+            // Create secondary image source for front camera
+            let secondaryImageSource = broadcastSession.createImageSource(withName: "secondary-image")
+            broadcastSession.attach(secondaryImageSource, toSlotWithName: "secondary-slot")
+            self.secondaryImageSource = secondaryImageSource
+
+            // Preview shows the primary camera
             attachCameraPreview(container: previewView, preview: try customImageSource.previewView(with: .fit))
             
             self.broadcastSession = broadcastSession
@@ -137,6 +154,91 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
     }
 
     private func setupCaptureSession() {
+        // Check if multi-cam is supported on this device
+        if AVCaptureMultiCamSession.isMultiCamSupported {
+            setupMultiCamSession()
+        } else {
+            setupSingleCamSession()
+        }
+    }
+    
+    private func setupMultiCamSession() {
+        let multiCamSession = AVCaptureMultiCamSession()
+        multiCamSession.beginConfiguration()
+
+        // Setup primary camera (back camera)
+        if let backCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back),
+           let backCameraInput = try? AVCaptureDeviceInput(device: backCamera),
+           multiCamSession.canAddInput(backCameraInput) {
+            
+            multiCamSession.addInputWithNoConnections(backCameraInput)
+            
+            let backVideoOutput = AVCaptureVideoDataOutput()
+            backVideoOutput.setSampleBufferDelegate(self, queue: queue)
+            backVideoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
+            
+            if multiCamSession.canAddOutput(backVideoOutput) {
+                multiCamSession.addOutputWithNoConnections(backVideoOutput)
+                
+                // Create connection for back camera
+                if let backVideoPort = backCameraInput.ports(for: .video, sourceDeviceType: backCamera.deviceType, sourceDevicePosition: backCamera.position).first {
+                    let backConnection = AVCaptureConnection(inputPorts: [backVideoPort], output: backVideoOutput)
+                    if multiCamSession.canAddConnection(backConnection) {
+                        multiCamSession.addConnection(backConnection)
+                        self.videoOutput = backVideoOutput
+                    }
+                }
+            }
+        }
+
+        // Setup secondary camera (front camera) - fully functional
+        if let frontCamera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front),
+           let frontCameraInput = try? AVCaptureDeviceInput(device: frontCamera),
+           multiCamSession.canAddInput(frontCameraInput) {
+            
+            multiCamSession.addInputWithNoConnections(frontCameraInput)
+            
+            let frontVideoOutput = AVCaptureVideoDataOutput()
+            frontVideoOutput.setSampleBufferDelegate(self, queue: secondaryQueue)
+            frontVideoOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
+            
+            if multiCamSession.canAddOutput(frontVideoOutput) {
+                multiCamSession.addOutputWithNoConnections(frontVideoOutput)
+                
+                // Create connection for front camera
+                if let frontVideoPort = frontCameraInput.ports(for: .video, sourceDeviceType: frontCamera.deviceType, sourceDevicePosition: frontCamera.position).first {
+                    let frontConnection = AVCaptureConnection(inputPorts: [frontVideoPort], output: frontVideoOutput)
+                    if multiCamSession.canAddConnection(frontConnection) {
+                        multiCamSession.addConnection(frontConnection)
+                        self.secondaryVideoOutput = frontVideoOutput
+                    }
+                }
+            }
+        }
+
+        // Setup audio
+        if let audioDevice = AVCaptureDevice.default(for: .audio),
+           let audioInput = try? AVCaptureDeviceInput(device: audioDevice),
+           multiCamSession.canAddInput(audioInput) {
+            
+            multiCamSession.addInput(audioInput)
+            
+            let audioOutput = AVCaptureAudioDataOutput()
+            audioOutput.setSampleBufferDelegate(self, queue: queue)
+            if multiCamSession.canAddOutput(audioOutput) {
+                multiCamSession.addOutput(audioOutput)
+                self.audioOutput = audioOutput
+            }
+        }
+
+        multiCamSession.commitConfiguration()
+        multiCamSession.startRunning()
+
+        self.multiCamSession = multiCamSession
+        self.captureSession = multiCamSession
+    }
+    
+    private func setupSingleCamSession() {
         let captureSession = AVCaptureSession()
         captureSession.beginConfiguration()
 
@@ -179,24 +281,25 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         if output == videoOutput {
-            
+            // Primary camera (back camera)
             connection.videoOrientation = orientation
             
-            // This keeps the images coming in with the correct orientation.
-            // connection.videoOrientation = orientation
-            // A host application can do further processing of this sample by applying a CIFilter, custom Metal shader, or
-            // by using a more complex pipeline that provides services like a beauty filter.
-            
-            // As an example using CIFilter
+            // Apply filter if enabled
             let finalBuffer = filterHelper?.process(inputBuffer: sampleBuffer) ?? sampleBuffer
             
-            // It is important that the processing finishes before the next frame arrives, otherwise frames will start to backup.
-            // If a new video sample does not arrive to the SDK in time, the previous sample will be repeated in the broadcast
-            // until a new frame arrives.
+            // Send to primary image source for broadcasting
             customImageSource?.onSampleBuffer(finalBuffer)
+            
+        } else if output == secondaryVideoOutput {
+            // Secondary camera (front camera)
+            connection.videoOrientation = orientation
+            
+            // You can apply different filters or processing to the secondary camera
+            // For now, we'll send it directly to the secondary image source
+            secondaryImageSource?.onSampleBuffer(sampleBuffer)
+            
         } else if output == audioOutput {
-            // A host application can do further processing of this sample here. It is required for processing to happen before
-            // the next sample arrives, otherwise audio may be dropped (it will be replaced with silence).
+            // Audio processing
             customAudioSource?.onSampleBuffer(sampleBuffer)
         }
     }
@@ -241,9 +344,97 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
     override func viewDidLayoutSubviews() {
         orientation = AVCaptureVideoOrientation(rawValue: UIApplication.shared.statusBarOrientation.rawValue)!
     }
+    
+    // MARK: - Multi-Cam Helper Methods
+    
+    /// Toggle secondary camera visibility
+    private func toggleSecondaryCamera(enabled: Bool) {
+        guard let broadcastSession = broadcastSession,
+              let secondaryImageSource = secondaryImageSource else { return }
+        
+        if enabled {
+            // Attach secondary camera to its slot
+            broadcastSession.attach(secondaryImageSource, toSlotWithName: "secondary-slot")
+        } else {
+            // Detach secondary camera from its slot
+            broadcastSession.detach(secondaryImageSource)
+        }
+    }
+    
+    /// Swap primary and secondary cameras
+    private func swapCameras() {
+        // Swap the outputs
+        let temp = videoOutput
+        videoOutput = secondaryVideoOutput
+        secondaryVideoOutput = temp
+        
+        // Swap the image sources
+        let tempSource = customImageSource
+        customImageSource = secondaryImageSource
+        secondaryImageSource = tempSource
+    }
+    
+    /// Switch the active camera between front and back
+    private func switchCamera(to position: AVCaptureDevice.Position) {
+        guard let multiCamSession = multiCamSession else { return }
+        
+        multiCamSession.beginConfiguration()
+        
+        // Find and remove existing video connections
+        if let existingOutput = videoOutput as? AVCaptureVideoDataOutput {
+            existingOutput.connections.forEach { connection in
+                if connection.isVideoOrientationSupported {
+                    multiCamSession.removeConnection(connection)
+                }
+            }
+        }
+        
+        // Add new camera
+        if let camera = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position),
+           let cameraInput = try? AVCaptureDeviceInput(device: camera) {
+            
+            if !multiCamSession.inputs.contains(cameraInput) {
+                if multiCamSession.canAddInput(cameraInput) {
+                    multiCamSession.addInputWithNoConnections(cameraInput)
+                }
+            }
+            
+            if let videoOutput = videoOutput as? AVCaptureVideoDataOutput,
+               let videoPort = cameraInput.ports(for: .video, sourceDeviceType: camera.deviceType, sourceDevicePosition: camera.position).first {
+                let connection = AVCaptureConnection(inputPorts: [videoPort], output: videoOutput)
+                if multiCamSession.canAddConnection(connection) {
+                    multiCamSession.addConnection(connection)
+                }
+            }
+        }
+        
+        multiCamSession.commitConfiguration()
+    }
+    
+    /// Get all available cameras for multi-cam
+    private func getAvailableCameras() -> [AVCaptureDevice] {
+        let discoverySession = AVCaptureDevice.DiscoverySession(
+            deviceTypes: [.builtInWideAngleCamera, .builtInUltraWideCamera, .builtInTelephotoCamera],
+            mediaType: .video,
+            position: .unspecified
+        )
+        return discoverySession.devices
+    }
+    
+    /// Adjust secondary camera position and size
+    private func updateSecondarySlot(position: CGPoint, size: CGSize) {
+        guard let config = broadcastConfig else { return }
+        
+        // Find and update the secondary slot
+        if let secondarySlot = config.mixer.slots.first(where: { $0.name == "secondary-slot" }) {
+            secondarySlot.position = position
+            secondarySlot.size = size
+        }
+    }
 }
 
 
+@available(iOS 13.0, *)
 extension CustomSourcesViewController: IVSBroadcastSession.Delegate {
     func broadcastSession(_ session: IVSBroadcastSession, didChange state: IVSBroadcastSession.State) {
         print("IVSBroadcastSession state did change to \(state.rawValue)")
