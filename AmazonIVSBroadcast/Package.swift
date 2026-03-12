@@ -20,13 +20,13 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "AmazonIVSBroadcast",
-            url: "https://broadcast.live-video.net/1.39.0/AmazonIVSBroadcast.xcframework.zip",
-            checksum: "382a937b1662f1db35fa900b382df20c913b9d6b9e91b4be2e3bfebb2a973ff6"
+            url: "https://broadcast.live-video.net/1.40.0/AmazonIVSBroadcast.xcframework.zip",
+            checksum: "864a655c37d90b59e7c1ea75bc8ef9a4ee436df0329ee2b96677aa22541cdfdb"
         ),
         .binaryTarget(
             name: "AmazonIVSBroadcastStages",
-            url: "https://broadcast.live-video.net/1.39.0/AmazonIVSBroadcast-Stages.xcframework.zip",
-            checksum: "ce4597eb04838a618fa1a68725caa71328324e60ff35b8733be4068e8aac05c8"
+            url: "https://broadcast.live-video.net/1.40.0/AmazonIVSBroadcast-Stages.xcframework.zip",
+            checksum: "0795f2f473330873682a3b3d68692b0c2e16dcdb0735e636514033ec63bb7398"
         )
     ]
 )
