@@ -239,7 +239,12 @@ class CustomSourcesViewController: UIViewController, AVCaptureVideoDataOutputSam
     }
     
     override func viewDidLayoutSubviews() {
-        orientation = AVCaptureVideoOrientation(rawValue: UIApplication.shared.statusBarOrientation.rawValue)!
+        guard let interfaceOrientation = view.window?.windowScene?.interfaceOrientation,
+              let videoOrientation = AVCaptureVideoOrientation(rawValue: interfaceOrientation.rawValue)
+        else {
+            return
+        }
+        orientation = videoOrientation
     }
 }
 

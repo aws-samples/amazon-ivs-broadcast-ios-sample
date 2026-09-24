@@ -28,6 +28,7 @@
 		EA6F461B2683784F00C7A12C /* UserDefaultsDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F46162683784F00C7A12C /* UserDefaultsDao.swift */; };
 		EA6F461C2683784F00C7A12C /* UserDefaultsDao.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA6F46162683784F00C7A12C /* UserDefaultsDao.swift */; };
 		EACB225426824C850037FF69 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACB225326824C850037FF69 /* AppDelegate.swift */; };
+		EACB22A02682000000000001 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACB22A12682000000000001 /* SceneDelegate.swift */; };
 		EACB225826824C850037FF69 /* LiveBroadcastViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EACB225726824C850037FF69 /* LiveBroadcastViewController.swift */; };
 		EACB225B26824C850037FF69 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EACB225926824C850037FF69 /* Main.storyboard */; };
 		EACB225D26824C860037FF69 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EACB225C26824C860037FF69 /* Assets.xcassets */; };
@@ -42,6 +43,7 @@
 		F8CD98F329B8D7BD00F43D0E /* ParticipantData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CD98E429B8D7BD00F43D0E /* ParticipantData.swift */; };
 		F8CD98F429B8D7BD00F43D0E /* StageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CD98E529B8D7BD00F43D0E /* StageViewModel.swift */; };
 		F8CD98F629B8D7BD00F43D0E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CD98E729B8D7BD00F43D0E /* AppDelegate.swift */; };
+		F8CD98A029B8000000000001 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8CD98A129B8000000000001 /* SceneDelegate.swift */; };
 		F8CD98F729B8D7BD00F43D0E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8CD98E829B8D7BD00F43D0E /* Main.storyboard */; };
 		F8CD98F829B8D7BD00F43D0E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F8CD98E929B8D7BD00F43D0E /* LaunchScreen.storyboard */; };
 		F8CD98F929B8D7BD00F43D0E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F8CD98EA29B8D7BD00F43D0E /* Assets.xcassets */; };
@@ -91,7 +93,9 @@
 		EA6F46162683784F00C7A12C /* UserDefaultsDao.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsDao.swift; sourceTree = "<group>"; };
 		EA6F461D26838CB300C7A12C /* ScreenCapture.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScreenCapture.entitlements; sourceTree = "<group>"; };
 		EACB225026824C850037FF69 /* BasicBroadcast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BasicBroadcast.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EACB22B02682000000000002 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
 		EACB225326824C850037FF69 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EACB22A12682000000000001 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		EACB225726824C850037FF69 /* LiveBroadcastViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveBroadcastViewController.swift; sourceTree = "<group>"; };
 		EACB225A26824C850037FF69 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EACB225C26824C860037FF69 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -109,6 +113,7 @@
 		F8CD98E529B8D7BD00F43D0E /* StageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StageViewModel.swift; sourceTree = "<group>"; };
 		F8CD98E629B8D7BD00F43D0E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F8CD98E729B8D7BD00F43D0E /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		F8CD98A129B8000000000001 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F8CD98E829B8D7BD00F43D0E /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		F8CD98E929B8D7BD00F43D0E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F8CD98EA29B8D7BD00F43D0E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -194,12 +199,21 @@
 		EACB224726824C850037FF69 = {
 			isa = PBXGroup;
 			children = (
+				EACB22B12682000000000002 /* Configurations */,
 				EACB225226824C850037FF69 /* BasicBroadcast */,
 				EA6F46082683773200C7A12C /* ScreenCapture */,
 				F8CD98C629B8D77D00F43D0E /* StagesApp */,
 				EACB225126824C850037FF69 /* Products */,
 				96497433203DC2DB0702754B /* Frameworks */,
 			);
+			sourceTree = "<group>";
+		};
+		EACB22B12682000000000002 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				EACB22B02682000000000002 /* Shared.xcconfig */,
+			);
+			path = Configurations;
 			sourceTree = "<group>";
 		};
 		EACB225126824C850037FF69 /* Products */ = {
@@ -219,6 +233,7 @@
 				EA6F46132683781F00C7A12C /* Storage */,
 				EA3D73EB2761037E004DC8CD /* ViewControllers */,
 				EACB225326824C850037FF69 /* AppDelegate.swift */,
+				EACB22A12682000000000001 /* SceneDelegate.swift */,
 				EACB225C26824C860037FF69 /* Assets.xcassets */,
 				EA6F46002683660500C7A12C /* BasicBroadcast.entitlements */,
 				EACB226126824C860037FF69 /* Info.plist */,
@@ -235,6 +250,7 @@
 			isa = PBXGroup;
 			children = (
 				F8CD98E729B8D7BD00F43D0E /* AppDelegate.swift */,
+				F8CD98A129B8000000000001 /* SceneDelegate.swift */,
 				F8CD98EA29B8D7BD00F43D0E /* Assets.xcassets */,
 				F8CD98E629B8D7BD00F43D0E /* Info.plist */,
 				F8CD98E929B8D7BD00F43D0E /* LaunchScreen.storyboard */,
@@ -427,6 +443,7 @@
 			files = (
 				EACB225826824C850037FF69 /* LiveBroadcastViewController.swift in Sources */,
 				EACB225426824C850037FF69 /* AppDelegate.swift in Sources */,
+				EACB22A02682000000000001 /* SceneDelegate.swift in Sources */,
 				EA6F46172683784F00C7A12C /* AuthItem.swift in Sources */,
 				EA04C030278880D300B7F6E4 /* TableViewController.swift in Sources */,
 				EA1B1529278CCDA7002DC2E3 /* ShowHideTextField.swift in Sources */,
@@ -452,6 +469,7 @@
 				F8CD98F129B8D7BD00F43D0E /* ParticipantCollectionViewCell.swift in Sources */,
 				F8CD98F429B8D7BD00F43D0E /* StageViewModel.swift in Sources */,
 				F8CD98F629B8D7BD00F43D0E /* AppDelegate.swift in Sources */,
+				F8CD98A029B8000000000001 /* SceneDelegate.swift in Sources */,
 				F8CD98EC29B8D7BD00F43D0E /* StageViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -526,6 +544,7 @@
 		};
 		EACB226226824C860037FF69 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EACB22B02682000000000002 /* Shared.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -575,7 +594,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -587,6 +605,7 @@
 		};
 		EACB226326824C860037FF69 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EACB22B02682000000000002 /* Shared.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -630,7 +649,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -693,10 +711,8 @@
 				INFOPLIST_FILE = StagesApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -724,10 +740,8 @@
 				INFOPLIST_FILE = StagesApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
