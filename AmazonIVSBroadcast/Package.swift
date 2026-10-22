@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "AmazonIVSBroadcast",
     platforms: [
-        .iOS("14.0"),
+        .iOS("15.0"),
     ],
     products: [
         .library(
@@ -20,13 +20,13 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "AmazonIVSBroadcast",
-            url: "https://broadcast.live-video.net/1.47.1/AmazonIVSBroadcast.xcframework.zip",
-            checksum: "3392d27c97ec12a8fa7d897d62a906e85adec628898711397d120a7100f3d054"
+            url: "https://broadcast.live-video.net/1.48.0/AmazonIVSBroadcast.xcframework.zip",
+            checksum: "007a7c1771c4dfc901e206ec379d21a54213cdee5decb4edef9b8259c06c7d8e"
         ),
         .binaryTarget(
             name: "AmazonIVSBroadcastStages",
-            url: "https://broadcast.live-video.net/1.47.1/AmazonIVSBroadcast-Stages.xcframework.zip",
-            checksum: "7a0c911187474a86f5cfdd60e69c1bae38d859573a3fb827c676b8a406311120"
+            url: "https://broadcast.live-video.net/1.48.0/AmazonIVSBroadcast-Stages.xcframework.zip",
+            checksum: "d2cc3f996e1581205c4bc61df23b4041a8e31f209c22b1507ddc74b0ef13cdd1"
         )
     ]
 )
